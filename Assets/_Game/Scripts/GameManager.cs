@@ -4,18 +4,17 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public CameraFollow cameraFollow;
     public GameObject Level_1;
     public GameObject People;
     public GameObject[] levels;
     public int currentLevel = 0;
 
-    public Transform playerSpawnPoint;
     private void Start()
     {
         UIManager.Instance.OpenUI<CanvasMainMenu>();
-        Instantiate(levels[currentLevel], Vector3.zero, Quaternion.identity);
-        //playerSpawnPoint = GameObject.Find("PlayerSpawnPoint").transform;
-        //LoadMap();
+        LoadLevel(0);
+
     }
     public void LoadLevel(int levelIndex)
     {
@@ -24,12 +23,15 @@ public class GameManager : MonoBehaviour
         Destroy(GameObject.Find("Level"));
         Instantiate(levels[currentLevel], Vector3.zero, Quaternion.identity);
 
-        playerSpawnPoint = GameObject.Find("PlayerSpawnPoint").transform;
 
         GameObject player = GameObject.Find("Player");
         if (player != null)
         {
-            player.transform.position = playerSpawnPoint.position;
+            GameObject spawnedPeople = Instantiate(People, player.transform.position, Quaternion.identity);
+            spawnedPeople.transform.SetParent(player.transform);
+            cameraFollow.Target = spawnedPeople.transform;
+            player.transform.position = new Vector3(1.5f, 2.8f, 6.5f);
+            //player.transform.position = transform.position;
         }
     }
 }

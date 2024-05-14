@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ControlPlayer : MonoBehaviour
@@ -13,7 +14,7 @@ public class ControlPlayer : MonoBehaviour
     [SerializeField]
     private LayerMask groundLayer; // LayerMask for ground
 
-    [SerializeField]
+    //[SerializeField]
     private Vector3 playerPosition; // Player's position
 
     [SerializeField]
@@ -72,7 +73,7 @@ public class ControlPlayer : MonoBehaviour
         }
         else
         {
-            if (Vector3.Distance(transform.position, playerPosition) > 0.1f)
+            if (Vector3.Distance(transform.position, new Vector3(playerPosition.x, this.transform.position.y, playerPosition.z)) > 0.1f)
             {
                 transform.position = Vector3.MoveTowards(
                     transform.position,
@@ -165,11 +166,7 @@ public class ControlPlayer : MonoBehaviour
     {
         if (Vector3.Distance(transform.position, playerPosition) > 0.01f)
         {
-            transform.position = Vector3.MoveTowards(
-                transform.position,
-                playerPosition,
-                2f * speed * Time.deltaTime
-            );
+            transform.position = Vector3.MoveTowards(transform.position, new Vector3(playerPosition.x, this.transform.position.y, playerPosition.z) ,2f * speed * Time.deltaTime);
             return;
         }
 
@@ -291,6 +288,7 @@ public class ControlPlayer : MonoBehaviour
     {
         if (other.CompareTag("Brick"))
         {
+            Debug.Log("Triggered " + other.tag);
             other.transform.SetParent(this.transform);
             transform.position += Vector3.up * 0.5f;
             bricks.Add(other.gameObject);
